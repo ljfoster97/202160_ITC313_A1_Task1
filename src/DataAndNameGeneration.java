@@ -1,13 +1,14 @@
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DataAndNameGeneration extends Utilities {
-    // Global variables for filenames.
+    // Declare variables for filenames.
     static String fileName = "rawdata.txt";
     static String dataFile = "data.txt";
     static String nameFile = "name.txt";
     static String normalizedOutput = "normalizeddata.txt";
-
 
     public static void generateNameAndDataFile() {
         ArrayList<Data> dataObjectArrayList = new ArrayList<>();
@@ -15,44 +16,44 @@ public class DataAndNameGeneration extends Utilities {
         System.out.println("Generating data file and name file...");
 
         // Try/catch block for file validation.
-            try {
-                // Create a new Scanner object to read in the file.
-                Scanner scanner = new Scanner(new File(fileName));
+        try {
+            // Create a new Scanner object to read in the file.
+            Scanner scanner = new Scanner(new File(fileName));
 
-                // The first line of the format specifies column names for data,
-                // so only the first line is read.
-                String firstLine = scanner.nextLine();
+            // The first line of the format specifies column names for data,
+            // so only the first line is read.
+            String firstLine = scanner.nextLine();
 
-                // Split strings in the first line and add them to a list.
-                // Regex to remove all whitespace.
-                // The format in the subject outline has inconsistent spacing between items,
-                // so this is the most effective way to account for that.
-                String[] name = firstLine.split("\\s+");
+            // Split strings in the first line and add them to a list.
+            // Regex to remove all whitespace.
+            // The format in the subject outline has inconsistent spacing between items,
+            // so this is the most effective way to account for that.
+            String[] name = firstLine.split("\\s+");
 
-                // Iterate through strings in the list.
-                for (String columnName : name) {
+            // Iterate through strings in the list.
+            for (String columnName : name) {
 
-                    // Create new data object using the name of the column.
-                    Data newData = new Data(columnName);
+                // Create new data object using the name of the column.
+                Data newData = new Data(columnName);
 
-                    // Add the new data object
-                    dataObjectArrayList.add(newData);
+                // Add the new data object
+                dataObjectArrayList.add(newData);
+            }
+
+            // Read the next line to get attributeType of data column.
+            String secondLine = scanner.nextLine();
+
+            // Every second line of the specified format in the subject outline is blank,
+            // so we need to account for blank lines.
+            // Check if the current line is empty.
+            if (secondLine.isEmpty()) {
+                do {
+                    // Skip the empty line.
+                    secondLine = scanner.nextLine();
                 }
-
-                // Read the next line to get attributeType of data column.
-                String secondLine = scanner.nextLine();
-
-                // Every second line of the specified format in the subject outline is blank,
-                // so we need to account for blank lines.
-                // Check if the current line is empty.
-                if (secondLine.isEmpty()) {
-                    do {
-                        // Skip the empty line.
-                        secondLine = scanner.nextLine();
-                    }
-                    // Exit loop when line is not empty.
-                    while (secondLine.isEmpty());
-                }
+                // Exit loop when line is not empty.
+                while (secondLine.isEmpty());
+            }
 
             // Split strings and add to list.
             String[] type = secondLine.split("\\s+");
@@ -108,7 +109,7 @@ public class DataAndNameGeneration extends Utilities {
             while (scanner.hasNextLine());
         }
         // Catch block in case file doesn't exist.
-        catch (FileNotFoundException e) {
+        catch(FileNotFoundException e) {
             throw new RuntimeException(
                     "Error! \"" + fileName + "\" not found.", e);
         }
@@ -148,5 +149,4 @@ public class DataAndNameGeneration extends Utilities {
             }
         }
     }
-
 }

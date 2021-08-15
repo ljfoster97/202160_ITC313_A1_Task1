@@ -3,20 +3,18 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- *
  * @author Lyndon Foster
  */
 public class Task1_2 {
-
-    // Create main ArrayList to store each line as an ArrayList of strings.
-    // private static ArrayList<String[]> dataArrayList = new ArrayList<>();
-    private static List<String[]> dataArrayList = new ArrayList<>(Collections.emptyList());
 
     // Global variables for filenames.
     static String fileName = "rawdata.txt";
     static String dataOutput = "data.txt";
     static String nameOutput = "name.txt";
     static String normalizedOutput = "normalizeddata.txt";
+    // Create main ArrayList to store each line as an ArrayList of strings.
+    // private static ArrayList<String[]> dataArrayList = new ArrayList<>();
+    private static final List<String[]> dataArrayList = new ArrayList<>(Collections.emptyList());
 
     /**
      * @param args not used.
@@ -100,7 +98,7 @@ public class Task1_2 {
 
         }
         // Catch block in case file doesn't exist.
-        catch (FileNotFoundException e) {
+        catch(FileNotFoundException e) {
             throw new RuntimeException(
                     "Error! \"" + fileName + "\" not found.", e);
         }
@@ -129,23 +127,23 @@ public class Task1_2 {
     }
 
     public static boolean domainCheck(List<String[]> dataArrayList) {
-        boolean duplicateDomain =  false;
-            List<String> list = new ArrayList<>();
-//            System.out.println("current:"+Arrays.toString(dataArrayList);
-            for (String[] line: dataArrayList) {
-                System.out.println("line"+ Arrays.toString(line));
-                for (String s: line) {
-                    list.add(s);
-                    System.out.println("string:"+s);
-                }
-                System.out.println(list);
+        boolean duplicateDomain = false;
+        List<String> list = new ArrayList<>();
+        //            System.out.println("current:"+Arrays.toString(dataArrayList);
+        for (String[] line : dataArrayList) {
+            System.out.println("line" + Arrays.toString(line));
+            for (String s : line) {
+                list.add(s);
+                System.out.println("string:" + s);
             }
-            for (int i = 0; i < (dataArrayList.get(i).length); i++) {
-                String s = list.get(i);
-                System.out.println("list:"+s);
+            System.out.println(list);
+        }
+        for (int i = 0; i < (dataArrayList.get(i).length); i++) {
+            String s = list.get(i);
+            System.out.println("list:" + s);
 
-            }
-      return duplicateDomain;
+        }
+        return duplicateDomain;
     }
 
 

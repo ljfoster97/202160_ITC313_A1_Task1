@@ -13,19 +13,18 @@ public abstract class Utilities {
             System.out.println("Writing data to " + fileName + "...");
             // Write the data to file.
             out.write(data);
-        } catch (IOException e) {
+        } catch(IOException e) {
             System.out.println("Error! Writing to " + fileName + "failed.");
             e.printStackTrace();
         }
         // Print message as confirmation if successful.
         finally {
-            System.out.println(fileName+" complete!");
-
+            System.out.println(fileName + " complete!");
         }
     }
 
     public static String buildData(ArrayList<Data> arrayList) {
-//        System.out.println(arrayList);
+        //        System.out.println(arrayList);
         // Create new StringBuilder object.
         StringBuilder stringBuilder = new StringBuilder();
         // Init counter.
@@ -39,16 +38,17 @@ public abstract class Utilities {
                 if (dataObject.isNormalized()) {
                     stringArrayList = dataObject.getNormalizedValues();
                 }
-//                else if (dataObject.isNormalized() && dataObject.getDataAttributeType().equals("c")){
-//                    System.out.println("categorical");
-//                    stringArrayList = dataObject.getData();
-//                    System.out.println(stringArrayList);
-//                }
+                //
+                //                else if (dataObject.isNormalized() && dataObject.getDataAttributeType().equals("c")){
+                //                    System.out.println("categorical");
+                //                    stringArrayList = dataObject.getData();
+                //                    System.out.println(stringArrayList);
+                //                }
                 else {
                     stringArrayList = dataObject.getData();
                 }
                 // Append the string at index i for the current data object.
-                if (!stringArrayList.isEmpty()) {
+                if (! stringArrayList.isEmpty()) {
                     stringBuilder.append(stringArrayList.get(i)).append(" ");
                 }
             }
@@ -74,7 +74,7 @@ public abstract class Utilities {
             String dataAttributeType = dataObject.getDataAttributeType();
             // Get the rest of the data.
             ArrayList<String> stringArrayList = dataObject.getData();
-            if ((!dataObject.isNormalized())) {
+            if ((! dataObject.isNormalized())) {
                 if (dataAttributeType.equals("n")) {
                     // Create ArrayList<Integer> to easily sort the numerical data.
                     ArrayList<Integer> numericalData = new ArrayList<>();
@@ -99,9 +99,7 @@ public abstract class Utilities {
                     currentColumn = dataObject.toString();
                 }
                 stringBuilder.append(currentColumn);
-                }
-
-            else if ((dataObject.isNormalized())) {
+            } else if ((dataObject.isNormalized())) {
                 ArrayList<String> normalizedValuesArrayList = dataObject.getNormalizedValues();
                 if (dataAttributeType.equals("n")) {
                     currentColumn = dataObject.toString();
@@ -113,17 +111,16 @@ public abstract class Utilities {
                 // Otherwise if the attribute type is categorical.
                 else if (dataAttributeType.equals("c")) {
                     findUniqueDomainValues(dataObject, normalizedValuesArrayList);
-                    if (dataObject.getUniqueDomainValues()>1) {
+                    if (dataObject.getUniqueDomainValues() > 1) {
                         currentColumn = dataObject.toString();
-                    }
-                    else {
+                    } else {
                         break;
                     }
                 }
                 // Check if the list is empty or not. If the list is empty then normalization method found
                 // repeating categorical domainvalues or equivalent numerical min max domain values,
                 // so the attribute should be removed from newname.txt.
-                if (!stringArrayList.isEmpty()) {
+                if (! stringArrayList.isEmpty()) {
                     // Append the current attribute column to the StringBuilder.
                     stringBuilder.append(currentColumn);
                 }
@@ -131,6 +128,7 @@ public abstract class Utilities {
         }
         return stringBuilder.toString();
     }
+
     public static void findUniqueDomainValues(Data dataObject, ArrayList<String> stringArrayList) {
         // Categorical type requires that we identify the number of unique attribute types.
         // Repeating attributes have already been previously removed from the arrayList.
@@ -145,7 +143,7 @@ public abstract class Utilities {
         // Create a new StringBuilder
         StringBuilder stringBuilder = new StringBuilder();
         // Iterate the stringHashSet to append the domain values to the string.
-        for (String s: stringHashSet) {
+        for (String s : stringHashSet) {
             stringBuilder.append(s).append(",");
         }
         // Size of the hashset is representative of the number of uniquely occuring domain values.

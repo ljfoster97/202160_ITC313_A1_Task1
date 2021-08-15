@@ -1,13 +1,21 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Data {
 
-    // Declarations
+    private final ArrayList<String> data = new ArrayList<>();
     private String dataColumnName;
     private String dataAttributeType;
     private double minimumAttributeValue;
     private double maximumAttributeValue;
+    private boolean normalized = false;
+    private int uniqueDomainValues;
+    private String domainValues;
+    private double normalizedValue;
+    private ArrayList<String> normalizedValues;
+
+    public Data(String dataColumnName) {
+        this.dataColumnName = dataColumnName;
+    }
 
     public boolean isNormalized() {
         return normalized;
@@ -17,24 +25,12 @@ public class Data {
         this.normalized = normalized;
     }
 
-    private boolean normalized = false;
-    private int uniqueDomainValues;
-    private String domainValues;
-    private double normalizedValue;
-    private ArrayList<String> normalizedValues;
-
     public String getDomainValues() {
         return domainValues;
     }
 
     public void setDomainValues(String domainValues) {
         this.domainValues = domainValues;
-    }
-
-    private ArrayList<String> data = new ArrayList<>();
-
-    public Data(String dataColumnName) {
-        this.dataColumnName = dataColumnName;
     }
 
     public String getDataColumnName() {
@@ -89,12 +85,12 @@ public class Data {
         this.uniqueDomainValues = uniqueDomainValues;
     }
 
-    public void setNormalizedValues(ArrayList<String> normalizedValues) {
-        this.normalizedValues = normalizedValues;
+    public ArrayList<String> getNormalizedValues() {
+        return normalizedValues;
     }
 
-    public ArrayList<String> getNormalizedValues(){
-        return normalizedValues;
+    public void setNormalizedValues(ArrayList<String> normalizedValues) {
+        this.normalizedValues = normalizedValues;
     }
 
     public String toString() {
@@ -106,24 +102,21 @@ public class Data {
             System.out.println("foo");
             stringBuilder.append(this.getMinimumAttributeValue()).append(",")
                     .append(this.getMaximumAttributeValue()).append("\n");
-        }
-        else if (this.dataAttributeType.equals("c")) {
+        } else if (this.dataAttributeType.equals("c")) {
             stringBuilder.append(this.getUniqueDomainValues()).append(",")
                     .append(this.getDomainValues()).append("\n");
         }
         return stringBuilder.toString();
     }
 
-
     public String dataToString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String s: data) {
+        for (String s : data) {
             stringBuilder.append(s);
             stringBuilder.append(",");
         }
         return stringBuilder.toString();
     }
-
 
 
 }

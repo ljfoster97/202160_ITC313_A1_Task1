@@ -1,15 +1,13 @@
-import java.io.*;
-import java.util.*;
+import java.util.Scanner;
 
 /**
- *
  * @author Lyndon Foster
  */
 public class Task1 {
     public static String menuOptions = ("""
-                1. Generate data file and name file
-                2. Normalized data file
-                3. Exit program""");
+            1. Generate data file and name file
+            2. Normalized data file
+            3. Exit program""");
 
     /**
      * @param args not used.
@@ -17,12 +15,12 @@ public class Task1 {
     public static void main(String[] args) {
 
         // Print user prompt.
-        System.out.println("*****Welcome to Data Pre-Processing Program*****\n"+menuOptions);
+        System.out.println("*****Welcome to Data Pre-Processing Program*****\n" + menuOptions);
 
         mainMenu();
     }
 
-    public static void mainMenu(){
+    public static void mainMenu() {
         // bool for input validation loop.
         boolean loop = true;
 
