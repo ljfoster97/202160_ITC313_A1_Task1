@@ -37,6 +37,7 @@ public abstract class Utilities {
                 // Create a list of strings for the data of the current object.
                 if (dataObject.isNormalized()) {
                     stringArrayList = dataObject.getNormalizedValues();
+//                    System.out.println("normalizedvals"+stringArrayList);
                 }
                 //
                 //                else if (dataObject.isNormalized() && dataObject.getDataAttributeType().equals("c")){
@@ -60,7 +61,7 @@ public abstract class Utilities {
         // Loop through entire arrayList size.
         while (i <= arrayList.size());
         // Return string that was created, ready to write to file.
-        return String.valueOf(stringBuilder);
+        return stringBuilder.toString();
     }
 
     public static String buildName(ArrayList<Data> dataObjectArrayList) {
@@ -77,11 +78,11 @@ public abstract class Utilities {
             if ((! dataObject.isNormalized())) {
                 if (dataAttributeType.equals("n")) {
                     // Create ArrayList<Integer> to easily sort the numerical data.
-                    ArrayList<Integer> numericalData = new ArrayList<>();
+                    ArrayList<Double> numericalData = new ArrayList<>();
                     // Iterate through the data of the current column.
                     for (String s : stringArrayList) {
                         // Convert each string to an integer and add to the new ArrayList.
-                        int i = Integer.parseInt(s);
+                        double i = Double.parseDouble(s);
                         numericalData.add(i);
                     }
                     // Call collections.sort() to quickly find minimum and maximum values.
@@ -95,7 +96,14 @@ public abstract class Utilities {
                 }
                 //
                 else if (dataAttributeType.equals("c")) {
+//                    System.out.println("raw");
+//                    System.out.println("Before");
+//                    System.out.println(dataObject);
+//                    System.out.println(stringArrayList);
                     findUniqueDomainValues(dataObject, stringArrayList);
+//                    System.out.println("after");
+//                    System.out.println(dataObject);
+//                    System.out.println(stringArrayList);
                     currentColumn = dataObject.toString();
                 }
                 stringBuilder.append(currentColumn);
@@ -110,7 +118,16 @@ public abstract class Utilities {
                 }
                 // Otherwise if the attribute type is categorical.
                 else if (dataAttributeType.equals("c")) {
-                    findUniqueDomainValues(dataObject, normalizedValuesArrayList);
+//                    System.out.println("normalized");
+//                    System.out.println("Before");
+//                    System.out.println(dataObject);
+//                    System.out.println("arraylist"+normalizedValuesArrayList);
+                    if (dataObject.getUniqueDomainValues()<=1) {
+                        findUniqueDomainValues(dataObject, normalizedValuesArrayList);
+                    }
+//                    System.out.println("after");
+//                    System.out.println(dataObject);
+//                    System.out.println(normalizedValuesArrayList);
                     if (dataObject.getUniqueDomainValues() > 1) {
                         currentColumn = dataObject.toString();
                     } else {
@@ -120,7 +137,7 @@ public abstract class Utilities {
                 // Check if the list is empty or not. If the list is empty then normalization method found
                 // repeating categorical domainvalues or equivalent numerical min max domain values,
                 // so the attribute should be removed from newname.txt.
-                if (! stringArrayList.isEmpty()) {
+                if (!stringArrayList.isEmpty()) {
                     // Append the current attribute column to the StringBuilder.
                     stringBuilder.append(currentColumn);
                 }
@@ -140,16 +157,17 @@ public abstract class Utilities {
         // GarbageCollector should get rid of the HashSet after operation.
         // Create a new HashSet<String> from the ArrayList of Strings.
         HashSet<String> stringHashSet = new HashSet<>(stringArrayList);
+//        System.out.println("getting new domain values");
+//        System.out.println(stringArrayList);
+//        System.out.println(stringHashSet.size());
         // Create a new StringBuilder
-        StringBuilder stringBuilder = new StringBuilder();
         // Iterate the stringHashSet to append the domain values to the string.
-        for (String s : stringHashSet) {
-            stringBuilder.append(s).append(",");
-        }
+        ArrayList<String> strings = new ArrayList<>(stringHashSet);
         // Size of the hashset is representative of the number of uniquely occuring domain values.
         dataObject.setUniqueDomainValues(stringHashSet.size());
         // Store the list of uniquely occurring domain values for the associated attribute.
-        dataObject.setDomainValues(stringBuilder.toString());
+//        System.out.println(strings);
+        dataObject.setDomainValues(strings);
     }
 
     public static boolean domainCheck(Data dataObject) {

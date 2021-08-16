@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Data {
 
@@ -9,7 +10,7 @@ public class Data {
     private double maximumAttributeValue;
     private boolean normalized = false;
     private int uniqueDomainValues;
-    private String domainValues;
+    private ArrayList<String> domainValues;
     private double normalizedValue;
     private ArrayList<String> normalizedValues;
 
@@ -26,10 +27,14 @@ public class Data {
     }
 
     public String getDomainValues() {
-        return domainValues;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s: this.domainValues) {
+            stringBuilder.append(s).append(",");
+        }
+        return stringBuilder.toString();
     }
 
-    public void setDomainValues(String domainValues) {
+    public void setDomainValues(ArrayList<String> domainValues) {
         this.domainValues = domainValues;
     }
 
@@ -94,12 +99,10 @@ public class Data {
     }
 
     public String toString() {
-        System.out.println("bar");
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.getDataAttributeType()).append(",")
                 .append(this.getDataColumnName()).append(",");
         if (this.dataAttributeType.equals("n")) {
-            System.out.println("foo");
             stringBuilder.append(this.getMinimumAttributeValue()).append(",")
                     .append(this.getMaximumAttributeValue()).append("\n");
         } else if (this.dataAttributeType.equals("c")) {

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Normalization extends Utilities {
@@ -51,6 +52,10 @@ public class Normalization extends Utilities {
                     // This unfortunately means calling domainCheck() again;
                     // so there is probably a more efficient way to do it.
                     newData.setUniqueDomainValues(Integer.parseInt(data[2]));
+                    ArrayList<String> domainValues = new ArrayList<>(Arrays.asList(data).subList(3, data.length));
+                    newData.setDomainValues(domainValues);
+                    System.out.println("Normalizing Categorical");
+                    System.out.println(Arrays.toString(data));
                 }
                 // Add the new Data object to the main ArrayList.
                 normalizedDataObjectArrayList.add(newData);
@@ -92,10 +97,16 @@ public class Normalization extends Utilities {
 
         // Iterate through the ArrayList<Data>, calling domainCheck on each object and
         // remove objects that have repeating domain values.
+        System.out.println("pre domain check");
+        System.out.println(normalizedDataObjectArrayList);
         normalizedDataObjectArrayList.removeIf(DataAndNameGeneration::domainCheck);
+        System.out.println("pre normalization:");
+        System.out.println(normalizedDataObjectArrayList);
 
         // Call normalization function, parsing in the main ArrayList of data objects.
         normalization(normalizedDataObjectArrayList);
+        System.out.println("post normalization");
+        System.out.println(normalizedDataObjectArrayList);
 
         // Parse the now normalized ArrayList of DataObjects to the buildData function which returns a string.
         // Parse the return of buildData to the writeToFile function, specifying the required filename.
@@ -113,7 +124,7 @@ public class Normalization extends Utilities {
             ArrayList<String> normalizedValues = new ArrayList<>();
             // init variables.
             double normalizedValue;
-            int attributeValue;
+            double attributeValue;
             // Get the minimum and maximum attribute values, and the attribute type.
             double minimumValue = dataObject.getMinimumAttributeValue();
             double maximumValue = dataObject.getMaximumAttributeValue();
@@ -132,27 +143,107 @@ public class Normalization extends Utilities {
                 continue;
             }
             // Iterate through the individual strings.
-            for (String attribute : dataObject.getData()) {
-                // need nested for loop for the rest, compare the min and max in a seperate outer loop.
-                if (dataAttributeType.equals("n") && maximumValue <= 1) {
-                    normalizedValues.add(attribute);
+                for (String attribute : dataObject.getData()) {
+                    // need nested for loop for the rest, compare the min and max in a seperate outer loop.
+                    if (dataAttributeType.equals("n") && maximumValue <= 1) {
+                        normalizedValues.add(attribute);
+                    }
+                    // Check if the attribute is numerical to perform normalization operation.
+                    else if (dataAttributeType.equals("n")) {
+                        // Cast string to integer.
+                        attributeValue = Double.parseDouble(attribute);
+                        // Normalization operation on integers, cast to double.
+                        normalizedValue = (attributeValue - minimumValue) / (maximumValue - minimumValue);
+                        // Add the string value of the normalization operation to the new arraylist, format to 3 decimal places.
+                        normalizedValues.add(String.format("%.3f", normalizedValue));
+                    }
+                    // Else if the attribute is categorical, just add to the list without any operation.
+                    else if (dataAttributeType.equals("c")) {
+                        normalizedValues.add(attribute);
+                    }
+                    // Add the newly created arraylist of normalizedValues to the dataObject.
+                    dataObject.setNormalizedValues(normalizedValues);
                 }
-                // Check if the attribute is numerical to perform normalization operation.
-                else if (dataAttributeType.equals("n")) {
-                    // Cast string to integer.
-                    attributeValue = Integer.parseInt(attribute);
-                    // Normalization operation on integers, cast to double.
-                    normalizedValue = (attributeValue - minimumValue) / (maximumValue - minimumValue);
-                    // Add the string value of the normalization operation to the new arraylist, format to 3 decimal places.
-                    normalizedValues.add(String.format("%.3f", normalizedValue));
-                }
-                // Else if the attribute is categorical, just add to the list without any operation.
-                else if (dataAttributeType.equals("c")) {
-                    normalizedValues.add(attribute);
-                }
-                // Add the newly created arraylist of normalizedValues to the dataObject.
-                dataObject.setNormalizedValues(normalizedValues);
             }
         }
-    }
+
+//    // Unfortunately this method is basically the same as the one as the one for generating the data.txt file.
+//    // The other method could likely be reused without having to write these few lines again.
+//    // I would have to combine NormalizedData object into Data object, or implement an interface for this function?
+//    // I could not figure out how to do it more efficiently at this stage, and wasn't sure how much encapsulation
+//    // would be considered best practice between the data and normalized data objects,
+//    // or if I should have a single class for data.
+//    // Try to merge with other function.
+//    public static String buildNormalizedData(ArrayList<Data> arrayList) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        // Init counter outside loop.
+//        int i = 0;
+//        // Do while loop
+//        do {
+//            // Iterate through each dataObject in the ArrayList
+//            for (Data dataObject : arrayList) {
+//                // Create a list of strings for the data of the current object.
+//                List<String> stringArrayList = dataObject.getNormalizedValues();
+//                // If there were duplicate values or equivalent min/max attribute values found
+//                // in normalization operation, the arrayList was initialized but will be empty.
+//                // Skip any empty arraylists to avoid index out of bounds exception
+//                // and only write the correct normalized values to file.
+//                if (!stringArrayList.isEmpty()) {
+//                    // Append the string at index i for the current data object.
+//                    stringBuilder.append(stringArrayList.get(i)).append(" ");
+//                }
+//            }
+//            // Add a new line.
+//            stringBuilder.append("\n");
+//            // Increment counter.
+//            i++;
+//        }
+//        // Loop through entire arrayList size.
+//        while (i <= arrayList.size());
+//        // Return string that was created, ready to write to file.
+//        return String.valueOf(stringBuilder);
+//    }
+
+//    // Try to merge with other function.
+//    public static String buildNewName(ArrayList<Data> arrayList) {
+//        // Create new StringBuilder.
+//        StringBuilder stringBuilder = new StringBuilder();
+//        // Iterate through each Data object in the main ArrayList
+//        for (Data dataObject: arrayList) {
+//            // Init empty string.
+//            String currentColumn = "";
+//            // Get the attribute type of the current Data object.
+//            String dataAttributeType = dataObject.getDataAttributeType();
+//            // Get the normalizedValues List<String> from the current Data object.
+//            ArrayList<String> stringArrayList = dataObject.getNormalizedValues();
+//            System.out.println(stringArrayList);
+//            System.out.println(dataObject.getMinimumAttributeValue());
+//            System.out.println(dataObject.getMaximumAttributeValue());
+//            // If the attribute type of the current data object is numerical
+//            if (dataAttributeType.equals("n")) {
+//                currentColumn = dataObject.toString();
+//            }
+//            // Otherwise if the attribute type is categorical.
+//            else if (dataAttributeType.equals("c")) {
+//                System.out.println("Categorical pre");
+//                System.out.println(dataObject);
+//                System.out.println(stringArrayList);
+////                DataAndNameGeneration.findUniqueDomainValues(dataObject, stringArrayList);
+//                currentColumn = dataObject.toString();
+//                System.out.println("cat post");
+//                System.out.println(dataObject);
+//                System.out.println(stringArrayList);
+//                System.out.println(currentColumn);
+//            }
+//            // Check if the list is empty or not. If the list is empty then normalization method found
+//            // repeating categorical domainvalues or equivalent numerical min max domain values,
+//            // so the attribute should be removed from newname.txt.
+//            if (!stringArrayList.isEmpty()) {
+//                // Append the current attribute column to the StringBuilder.
+//                stringBuilder.append(currentColumn);
+//            }
+//        }
+//        // Return the final string from StringBuilder after every Data object in the primary ArrayList has been parsed.
+//        return stringBuilder.toString();
+//    }
 }
